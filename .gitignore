@@ -1,0 +1,14 @@
+output.txt
+node_modules
+dist
+.mastra
+.env.development
+.env
+*.db
+*.db-*
+*.duckdb
+*.duckdb-*
+*.duckdb.wal
+src/mastra/public/
+.netlify
+.vercel
