@@ -1,14 +1,35 @@
-output.txt
 node_modules
 dist
 .mastra
-.env.development
+src/mastra/public/
+
+# env
 .env
+.env.*
+!.env.example
+
+# db
 *.db
 *.db-*
 *.duckdb
 *.duckdb-*
 *.duckdb.wal
-src/mastra/public/
+
+# os
+.DS_Store
+Thumbs.db
+
+# editor
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# platform
 .netlify
 .vercel
+.wrangler
+
+# misc
+output.txt

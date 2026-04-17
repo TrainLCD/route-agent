@@ -12,7 +12,7 @@ async function gqlRequest(query: string, variables?: Record<string, unknown>) {
   if (!res.ok) {
     throw new Error(`GraphQL request failed: ${res.status} ${res.statusText}`);
   }
-  const json = await res.json();
+  const json = (await res.json()) as { data: Record<string, any>; errors?: unknown[] };
   if (json.errors) {
     throw new Error(
       `GraphQL errors: ${JSON.stringify(json.errors, null, 2)}`

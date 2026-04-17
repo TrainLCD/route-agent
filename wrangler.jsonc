@@ -1,0 +1,30 @@
+{
+  /* This file was auto-generated through Mastra. Edit the CloudflareDeployer() instance directly. */
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "route-agent",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "nodejs_compat_populate_process_env"
+  ],
+  "observability": {
+    "logs": {
+      "enabled": true
+    }
+  },
+  "scope": "38d776d9385fbdbad95832d383b63e7b",
+  "d1_databases": [
+    {
+      "binding": "D1Database",
+      "database_name": "route-agent-db",
+      "database_id": "8f4e9a80-2cdd-4381-81cd-3b62ecfce88b"
+    }
+  ],
+  "main": "./.mastra/output/index.mjs",
+  "vars": {},
+  "alias": {
+    "typescript": "./.mastra/output/typescript-stub.mjs",
+    "execa": "./execa-stub.mjs",
+    "readable-stream": "./readable-stream-stub.mjs"
+  }
+}

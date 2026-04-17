@@ -1,42 +1,31 @@
 
 import { Mastra } from '@mastra/core/mastra';
 import { PinoLogger } from '@mastra/loggers';
-import { LibSQLStore } from '@mastra/libsql';
-import { DuckDBStore } from "@mastra/duckdb";
-import { MastraCompositeStore } from '@mastra/core/storage';
-import { Observability, DefaultExporter, CloudExporter, SensitiveDataFilter } from '@mastra/observability';
+import { CloudflareDeployer } from '@mastra/deployer-cloudflare';
+import { D1Store } from '@mastra/cloudflare-d1';
+import { env } from 'cloudflare:workers';
 
 import { routeAgent } from './agents/route-agent';
 
-
 export const mastra = new Mastra({
   agents: { routeAgent },
-  storage: new MastraCompositeStore({
-    id: 'composite-storage',
-    default: new LibSQLStore({
-      id: "mastra-storage",
-      url: "file:./mastra.db",
-    }),
-    domains: {
-      observability: await new DuckDBStore().getStore('observability'),
-    }
+  storage: new D1Store({
+    id: 'route-agent-storage',
+    binding: (env as Record<string, unknown>).D1Database as D1Database,
+  }),
+  deployer: new CloudflareDeployer({
+    scope: process.env.CLOUDFLARE_ACCOUNT_ID!,
+    name: 'route-agent',
+    d1_databases: [
+      {
+        binding: 'D1Database',
+        database_name: 'route-agent-db',
+        database_id: '8f4e9a80-2cdd-4381-81cd-3b62ecfce88b',
+      },
+    ],
   }),
   logger: new PinoLogger({
     name: 'Mastra',
     level: 'info',
-  }),
-  observability: new Observability({
-    configs: {
-      default: {
-        serviceName: 'mastra',
-        exporters: [
-          new DefaultExporter(), // Persists traces to storage for Mastra Studio
-          new CloudExporter(), // Sends traces to Mastra Cloud (if MASTRA_CLOUD_ACCESS_TOKEN is set)
-        ],
-        spanOutputProcessors: [
-          new SensitiveDataFilter(), // Redacts sensitive data like passwords, tokens, keys
-        ],
-      },
-    },
   }),
 });
